@@ -1,0 +1,65 @@
+{
+  "flower": {
+    "petals": {
+      "type": "geometry",
+      "shape": "circle",
+      "segments": 5,
+      "radius": 0.5,
+      "height": 0.1,
+      "material": {
+        "color": "0xff69b4",
+        "emissive": "0xff1493",
+        "emissiveIntensity": 0.3,
+        "shininess": 30
+      },
+      "arrangement": {
+        "count": 8,
+        "radius": 0.3,
+        "rotationOffset": 0.4,
+        "tiltAngle": 0.3
+      }
+    },
+    "center": {
+      "type": "geometry",
+      "shape": "sphere",
+      "radius": 0.2,
+      "segments": 16,
+      "material": {
+        "color": "0xffff00",
+        "emissive": "0xffcc00",
+        "emissiveIntensity": 0.5
+      }
+    },
+    "stem": {
+      "type": "geometry",
+      "shape": "cylinder",
+      "radius": 0.05,
+      "height": 2.0,
+      "segments": 8,
+      "material": {
+        "color": "0x00aa00",
+        "shininess": 10
+      }
+    },
+    "leaves": {
+      "type": "geometry",
+      "shape": "plane",
+      "width": 0.5,
+      "height": 0.2,
+      "material": {
+        "color": "0x008800",
+        "side": "doubleSide"
+      },
+      "arrangement": {
+        "count": 2,
+        "heightPositions": [0.5, 1.0],
+        "rotationAngles": [0, 2.1]
+      }
+    },
+    "animation": {
+      "swaySpeed": 0.5,
+      "swayAmount": 0.1,
+      "rotateSpeed": 0.2
+    }
+  }
+}
