@@ -1,127 +1,20 @@
 import * as THREE from 'three';
+import { Avatar } from './avatar.js';
 
 export class Player {
     constructor(scene, camera) {
         this.scene = scene;
         this.camera = camera;
         
-        // Create player mesh (rectangle)
-        // Create main body
-        const bodyGeometry = new THREE.BoxGeometry(1, .3, 2); // 2 units long, 1 unit wide/tall
-        const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-        this.mesh = new THREE.Mesh(bodyGeometry, material);
+        // Create player avatar
+        const avatarData = {
+            size: 1,
+            evolutionLevel: 1
+        };
+        const avatar = new Avatar(avatarData);
+        this.mesh = avatar.getMesh();
         this.mesh.position.y = 10; // Start above ground
         scene.add(this.mesh);
-        
-        // Add head at the front
-        const headGeometry = new THREE.BoxGeometry(0.5, 0.3, 0.4);
-        const headMaterial = new THREE.MeshPhongMaterial({ color: 0x00aa00 });
-        const head = new THREE.Mesh(headGeometry, headMaterial);
-        head.position.set(0, 0.1, -1.1); // Position at the front and slightly above the body
-        this.mesh.add(head);
-
-        const eyeSocketGeometry = new THREE.BoxGeometry(0.48, 0.2, 0.2);
-        const eyeSocketMaterial = new THREE.MeshPhongMaterial({ color: 0x006600 });
-        const eyeSocket = new THREE.Mesh(eyeSocketGeometry, eyeSocketMaterial);
-        eyeSocket.position.set(0, 0.12, -1.35); // Position in front of the head
-        this.mesh.add(eyeSocket);
-        // Add eyes inside the eye socket
-        const eyeGeometry = new THREE.SphereGeometry(0.08, 16, 16);
-        const eyeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-        
-        // Left eye
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        leftEye.position.set(0.12, 0.12, -1.42); // Position in front of the eye socket
-        this.mesh.add(leftEye);
-        
-        // Right eye
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        rightEye.position.set(-0.12, 0.12, -1.42); // Position in front of the eye socket
-        this.mesh.add(rightEye);
-        
-        // Add pupils (black centers of the eyes)
-        const pupilGeometry = new THREE.SphereGeometry(0.04, 8, 8);
-        const pupilMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-        
-        // Left pupil
-        const leftPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-        leftPupil.position.set(0.12, 0.12, -1.46); // Position in front of the left eye
-        this.mesh.add(leftPupil);
-        
-        // Right pupil
-        const rightPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-        rightPupil.position.set(-0.12, 0.12, -1.46); // Position in front of the right eye
-        this.mesh.add(rightPupil);
-        
-        
-
-        // Add mouth (two thin boxes) in front of the head
-        const upperMouthGeometry = new THREE.BoxGeometry(0.46, 0.05, 0.5);
-        const lowerMouthGeometry = new THREE.BoxGeometry(0.46, 0.05, 0.5);
-        const mouthMaterial = new THREE.MeshPhongMaterial({ color: 0x006600 });
-        
-        // Upper part of mouth
-        const upperMouth = new THREE.Mesh(upperMouthGeometry, mouthMaterial);
-        upperMouth.position.set(0, 0.05, -1.35); // Position in front of the head
-        this.mesh.add(upperMouth);
-        
-        // Lower part of mouth
-        const lowerMouth = new THREE.Mesh(lowerMouthGeometry, mouthMaterial);
-        lowerMouth.position.set(0, 0.00, -1.35); // Position below the upper mouth
-        this.mesh.add(lowerMouth);
-        
-        // Add four feet (small rectangles)
-        const footGeometry = new THREE.BoxGeometry(0.2, 0.7, 0.3);
-        const footMaterial = new THREE.MeshPhongMaterial({ color: 0x008800 });
-        
-        // Create foot joints (empty components)
-        // Front left joint
-        const frontLeftJoint = new THREE.Object3D();
-        frontLeftJoint.position.set(0.45, -0.35, 0.8); // Bottom side corner position
-        this.mesh.add(frontLeftJoint);
-        
-        // Front right joint
-        const frontRightJoint = new THREE.Object3D();
-        frontRightJoint.position.set(-0.45, -0.35, 0.8); // Bottom side corner position
-        this.mesh.add(frontRightJoint);
-        
-        // Back left joint
-        const backLeftJoint = new THREE.Object3D();
-        backLeftJoint.position.set(0.45, -0.35, -0.8); // Bottom side corner position
-        this.mesh.add(backLeftJoint);
-        
-        // Back right joint
-        const backRightJoint = new THREE.Object3D();
-        backRightJoint.position.set(-0.45, -0.35, -0.8); // Bottom side corner position
-        this.mesh.add(backRightJoint);
-        
-        // Front left foot
-        const frontLeftFoot = new THREE.Mesh(footGeometry, footMaterial);
-        frontLeftFoot.position.set(0, 0.1, 0); // Position relative to joint
-        frontLeftJoint.add(frontLeftFoot);
-        
-        // Front right foot
-        const frontRightFoot = new THREE.Mesh(footGeometry, footMaterial);
-        frontRightFoot.position.set(0, 0.1, 0); // Position relative to joint
-        frontRightJoint.add(frontRightFoot);
-        
-        // Back left foot
-        const backLeftFoot = new THREE.Mesh(footGeometry, footMaterial);
-        backLeftFoot.position.set(0, 0.1, 0); // Position relative to joint
-        backLeftJoint.add(backLeftFoot);
-        
-        // Back right foot
-        const backRightFoot = new THREE.Mesh(footGeometry, footMaterial);
-        backRightFoot.position.set(0, 0.1, 0); // Position relative to joint
-        backRightJoint.add(backRightFoot);
-        
-        // Store references to joints for animation if needed
-        this.footJoints = {
-            frontLeft: frontLeftJoint,
-            frontRight: frontRightJoint,
-            backLeft: backLeftJoint,
-            backRight: backRightJoint
-        };
 
         // Create an empty component at the same location as the player
         this.component = new THREE.Object3D();
