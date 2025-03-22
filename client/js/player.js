@@ -1,18 +1,23 @@
 import * as THREE from 'three';
-import { Avatar } from './avatar.js';
+import { Avatar } from './characterComps/avatar.js';
+import { Animation } from './characterComps/animation.js';
+import { PlayerState } from './characterComps/playerState.js';
 
 export class Player {
-    constructor(scene, camera) {
+    constructor(scene, camera, animationManager) {
         this.scene = scene;
         this.camera = camera;
+        this.state = new PlayerState();
         
         // Create player avatar
         const avatarData = {
             size: 1,
             evolutionLevel: 1
         };
-        const avatar = new Avatar(avatarData);
-        this.mesh = avatar.getMesh();
+        this.avatar = new Avatar(avatarData);
+        // Add animation to the avatar
+        this.animation = new Animation(this.avatar, animationManager, this.state);
+        this.mesh = this.avatar.getMesh();
         this.mesh.position.y = 10; // Start above ground
         scene.add(this.mesh);
 
@@ -37,7 +42,9 @@ export class Player {
         // Attach the camera to the component
         this.component.add(this.camera);
 
-        // Physics
+        // Add PlayerState instance
+        
+        // Update speed to use PlayerState's speed
         this.velocity = new THREE.Vector3();
         this.gravity = -0.01;
         this.grounded = false;
@@ -128,14 +135,13 @@ export class Player {
             if (controls.moveRight) moveDirection.add(rightVector);
             if (controls.moveLeft) moveDirection.sub(rightVector);
 
-            // Normalize and apply movement
+            // Normalize and apply movement using PlayerState's speed
             if (moveDirection.length() > 0) {
-
                 this.mesh.rotation.y += this.euler.y;
                 this.euler.y = 0;
                 
                 moveDirection.normalize();
-                this.mesh.position.add(moveDirection.multiplyScalar(controls.speed));
+                this.mesh.position.add(moveDirection.multiplyScalar(this.state.speed * controls.speed));
             }
         }
 

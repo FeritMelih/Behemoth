@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { Controls } from './controls.js';
-import { WorldGenerator } from './worldGenerator.js';
-import { Player } from './player.js';
+import { Controls } from '../controls.js';
+import { WorldGenerator } from '../worldGenerator.js';
+import { Player } from '../player.js';
+import { AnimationManager } from './animationManager.js';
 
 export class Game {
     constructor() {
@@ -14,6 +15,8 @@ export class Game {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
         
+        // Add AnimationManager initialization
+        this.animationManager = new AnimationManager();
         
         // Initialize world
         this.initWorld();
@@ -22,9 +25,10 @@ export class Game {
         this.controls = new Controls(this.camera, this.renderer.domElement);
         
         // Initialize player
-        this.player = new Player(this.scene, this.camera);
+        this.player = new Player(this.scene, this.camera, this.animationManager);
         
         // Start game loop
+        this.lastTime = performance.now();
         this.animate();
     }
     
@@ -104,11 +108,16 @@ export class Game {
     
     
     animate() {
+        const currentTime = performance.now();
+        const deltaTime = (currentTime - this.lastTime) / 1000; // Convert to seconds
+        this.lastTime = currentTime;
+
         requestAnimationFrame(() => this.animate());
         
+        // Update animations
+        this.animationManager.update(deltaTime);
         
         this.player.update(this.controls);
-   
         
         this.renderer.render(this.scene, this.camera);
     }
